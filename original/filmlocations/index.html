@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Movie Locations</title>
+  
+	<script src="js/jquery-3.3.1.min.js"></script>	
+	<!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+	<script src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
+    <script src="js/jquery.event.move.js"></script>
+    <script src="js/jquery.twentytwenty.js"></script>
+
+	<link rel="stylesheet" href="css/jquery-ui.css"> 
+	<link href="css/foundation.css" rel="stylesheet" type="text/css" />
+	<link href="css/twentytwenty.css" rel="stylesheet" type="text/css" />
+
+
+  <style>
+	#video {
+	    position: absolute; 
+        padding: 5px;
+        left: 130px; 
+        top: 12px; 
+        z-Index: 40;
+        width: 180px;
+	
+	}
+	
+
+	#imgButtonHeight {
+		position: absolute; 
+		padding: 2px;
+        right: 10px; 
+        top: 12px; 
+        z-Index: 40;
+        width: 24px;
+	}
+	
+	#imgButtonWidth {
+	    position: absolute; 
+        padding: 2px;
+        right: 42px; 
+        top: 12px; 
+        z-Index: 40;
+        width: 24px;
+	}
+    #selectWrapper {
+        position: absolute; 
+        padding: 5px;
+        left: 12px; 
+        top: 12px; 
+        z-Index: 40;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 14px;
+        width: 210px;
+
+        background: #f4f4f4;
+        -moz-box-shadow: 0 0 5px #444444;
+        -webkit-box-shadow: 0 0 5px #444444;
+        box-shadow: 0 0 5px #444444;
+      }
+	select {
+		font-size: 14px;
+		margin-top: 5px;
+
+	  }
+ 
+ #stats {
+ position: absolute;
+ left:12px;
+ top:500px;
+ color:yellow;
+ }
+	
+#tabs {
+min-height: 400px;
+overflow: auto;
+}
+
+</style>
+
+<script>
+	var expandToWidth=false
+	var initialWidth
+	var initialHeight
+	var rtime;
+	var timeout = false;
+	var delta = 100;
+	
+	var ratioBB01=1.33
+	var ratioBB02=1.60
+	var ratioBB03=1.51
+	var ratioBB04=1.39
+	var ratioBB05=1.27
+	var ratioBB06=1.77
+	var ratioBB07=1.52
+	var ratioBB08=1.67
+	var ratioBB09=1.54
+	var ratioBB10=1.55
+	var ratioBB11=2.07
+	var ratioBB12=1.48
+	var ratioBB13=1.31
+	var ratioBB14=1.45
+	var ratioBB15=1.57
+	var ratioBB16=1.40
+	var ratioBB17=1.67
+	var ratioBB18=1.31
+	var ratioBB19=1.63
+	var ratioBB20=1.69
+	var ratioBB21=1.53
+
+	var ratioBB22=0.88
+	var ratioBB23=0.87
+	var ratioBB24=0.80
+	var ratioBB25=0.82
+	var ratioBB26=0.84
+	var ratioBB27=0.77
+	var ratioBB28=0.84
+	var ratioBB29=0.86
+
+	var ratioGBU01=1.33
+	var ratioGBU02=1.33
+	var ratioGBU03=1.33
+	var ratioGBU04=1.33
+	var ratioGBU05=1.58
+	var ratioGBU06=1.33
+	var ratioGBU07=1.33
+	var ratioGBU08=1.33
+	var ratioGBU09=1.33
+	var ratioGBU10=1.33
+	var ratioGBU11=1.33
+	var ratioGBU12=1.33
+
+	var ratioTW01=1.33
+	var ratioTW02=1.33
+	var ratioTW03=1.33
+	var ratioTW04=1.33
+	var ratioTW05=1.33
+	var ratioTW06=1.33
+	var ratioTW07=1.33
+	var ratioTW08=1.33
+	var ratioTW09=1.33
+	var ratioTW10=1.33
+	var ratioTW11=1.33
+	var ratioTW12=1.33
+
+	var ratioOUAT01=1.65
+	var ratioOUAT02=1.28
+	var ratioOUAT03=1.26
+	var ratioOUAT04=1.14
+	var ratioOUAT05=1.31
+	var ratioOUAT06=1.17
+	var ratioOUAT07=1.13
+
+	var ratioFG01=1.17
+
+
+	$( function() {
+		$( "#tabs" ).tabs(	{
+			activate: function( event, ui ) {
+				expandToWidth=false
+				doStuff()
+			}
+			
+		});
+	});
+
+
+	$( document ).ready(function(){
+		$(".twentytwenty-container[data-orientation!='vertical']").twentytwenty({default_offset_pct: 0.6, before_label: '', after_label: '', click_to_move: true});
+		doStuff()
+	});
+
+
+	function doStuff() {
+				
+		theTab=$("#tabs").tabs('option','active')
+
+		//Figure out what tab we're on
+		if (theTab==0) {
+			theSelected=$("#photoSelectBB").val()
+		} else if (theTab==1) {
+			theSelected=$("#photoSelectGBU").val()
+		} else if (theTab==2) {
+			theSelected=$("#photoSelectTW").val()
+		} else if (theTab==3) {
+			theSelected=$("#photoSelectOUAT").val()
+		} else if (theTab==4) {
+			theSelected=$("#photoSelectFG").val()
+		}
+
+		theSelectedIndex=parseInt(theSelected.substr(theSelected.length-2),10)
+		//Figure out whether to turn the slide on or off
+		//Breaking Bad
+		if ((theTab==0) && (theSelectedIndex>=22)) {
+			$(".twentytwenty-handle").css({"visibility":"hidden"})
+		} else {
+			$(".twentytwenty-handle").css({"visibility":"visible"})
+		}
+
+		//GBU
+		if (theTab==1) {
+			$(".twentytwenty-handle").css({"visibility":"visible"})
+		}
+		
+		//Twilight
+		if (theTab==2) {
+			$(".twentytwenty-handle").css({"visibility":"visible"})
+		}		
+	
+		//Once Upon A Time In The West
+		if (theTab==3) {
+			if (theSelectedIndex==4 || theSelectedIndex==5 || theSelectedIndex==7){
+				$(".twentytwenty-handle").css({"visibility":"hidden"})
+			} else {
+				$(".twentytwenty-handle").css({"visibility":"visible"})
+			}
+		}
+
+
+		//Forrest Gump
+		if (theTab==4) {
+			$(".twentytwenty-handle").css({"visibility":"hidden"})
+		}			
+		
+		if ($(window).width()/($(window).height()-55) > eval("ratio"+theSelected)) {
+		//Window is wider than it needs to be
+			document.getElementById("imgButtonWidth").disabled=false
+			document.getElementById("imgButtonWidth").src="img/fit_horizontal.png"	
+			document.getElementById("imgButtonHeight").disabled=false
+			document.getElementById("imgButtonHeight").src="img/fit_vertical.png"
+			
+			if (expandToWidth==false) {	
+			// Resize to height of window.  This is the default
+				$("#imgBB1").css({"height": $(window).height()-55});
+				$("#imgBB2").css({"height": $(window).height()-55});
+				$("#imgGBU1").css({"height": $(window).height()-55});
+				$("#imgGBU2").css({"height": $(window).height()-55});	
+				$("#imgTW1").css({"height": $(window).height()-55});
+				$("#imgTW2").css({"height": $(window).height()-55});	
+				$("#imgOUAT1").css({"height": $(window).height()-55});
+				$("#imgOUAT2").css({"height": $(window).height()-55});				
+				$("#imgFG1").css({"height": $(window).height()-55});
+				$("#imgFG2").css({"height": $(window).height()-55});	
+			} else {
+			//Resize to width of window
+				$("#imgBB1").css({"height": "auto"});	
+				$("#imgBB2").css({"height": "auto"});	
+				$("#imgGBU1").css({"height": "auto"});	
+				$("#imgGBU2").css({"height": "auto"});	
+				$("#imgTW1").css({"height": "auto"});	
+				$("#imgTW2").css({"height": "auto"});				
+				$("#imgOUAT1").css({"height": "auto"});	
+				$("#imgOUAT2").css({"height": "auto"});
+				$("#imgFG1").css({"height": "auto"});	
+				$("#imgFG2").css({"height": "auto"});			
+			}
+		} else {
+		//Window is too narrow
+			// Resize to width of window
+				document.getElementById("imgButtonWidth").disabled=true
+				document.getElementById("imgButtonWidth").src="img/fit_horizontal_disabled.png"
+				document.getElementById("imgButtonHeight").disabled=true
+				document.getElementById("imgButtonHeight").src="img/fit_vertical_disabled.png"
+				$("#imgBB1").css({"height": "auto"});	
+				$("#imgBB2").css({"height": "auto"});	
+				$("#imgGBU1").css({"height": "auto"});	
+				$("#imgGBU2").css({"height": "auto"});	
+				$("#imgTW1").css({"height": "auto"});	
+				$("#imgTW2").css({"height": "auto"});	
+				$("#imgOUAT1").css({"height": "auto"});	
+				$("#imgOUAT2").css({"height": "auto"});
+				$("#imgFG1").css({"height": "auto"});	
+				$("#imgFG2").css({"height": "auto"});
+			}
+			
+		$(window).trigger("resize");
+		
+	}
+
+	
+	$(window).resize(function() {
+
+		rtime = new Date();
+		if (timeout === false) {
+			timeout = true;
+			setTimeout(resizeend, delta);
+	   }
+	});
+
+	function resizeend() {
+		if (new Date() - rtime < delta) {
+			setTimeout(resizeend, delta);
+		} else {
+			timeout = false;
+			doStuff()
+		}               
+	}
+
+
+	function changePhoto(selectedPhoto, movie) {
+
+		if (movie=="BB") {
+			document.getElementById("imgBB1").src="img/"+selectedPhoto+"_01.jpg"
+			document.getElementById("imgBB2").src="img/"+selectedPhoto+"_02.jpg"
+		} else if (movie=="GBU") {
+			document.getElementById("imgGBU1").src="img/"+selectedPhoto+"_01.jpg"
+			document.getElementById("imgGBU2").src="img/"+selectedPhoto+"_02.jpg"
+		} else if (movie=="TW") {
+			document.getElementById("imgTW1").src="img/"+selectedPhoto+"_01.jpg"
+			document.getElementById("imgTW2").src="img/"+selectedPhoto+"_02.jpg"
+		} else if (movie=="OUAT") {
+			document.getElementById("imgOUAT1").src="img/"+selectedPhoto+"_01.jpg"
+			document.getElementById("imgOUAT2").src="img/"+selectedPhoto+"_02.jpg"
+		} else if (movie=="FG") {
+			document.getElementById("imgFG1").src="img/"+selectedPhoto+"_01.jpg"
+			document.getElementById("imgFG2").src="img/"+selectedPhoto+"_02.jpg"
+		}
+		
+		expandToWidth=false		
+		doStuff()
+	}
+
+
+	function buttonWidth() {
+		//alert("width")
+		expandToWidth=true
+		doStuff()
+	}
+
+	function buttonHeight() {
+		//alert("height")
+		expandToWidth=false
+		doStuff()
+	}
+</script>
+
+</head>
+  
+<body>
+
+<div id="tabs" style="background:#FFFFFF;border:0px;position:relative;" >
+	<ul style="border-bottom-right-radius:0;border-bottom-left-radius:0;">
+		<li style="margin-bottom:0px;padding-bottom:0px;"><a href="#fragment-1"><span>Breaking Bad</span></a></li>
+		<li style="margin-bottom:0px;padding-bottom:0px;"><a href="#fragment-2"><span>The Good, Bad & Ugly</span></a></li>
+		<li style="margin-bottom:0px;padding-bottom:0px;"><a href="#fragment-3"><span>Twilight</span></a></li>
+		<li style="margin-bottom:0px;padding-bottom:0px;"><a href="#fragment-4"><span>Once Upon a Time in the West</span></a></li>
+		<li style="margin-bottom:0px;padding-bottom:0px;"><a href="#fragment-5"><span>Forrest Gump</span></a></li>
+	</ul>
+
+
+	<div id="fragment-1" style="padding: 0px 0px;position: relative;"> 
+
+		<div class="large-12 large-centered columns">
+			<div class="twentytwenty-container"> 
+				<img src="img/BB01_01.jpg" id="imgBB2"/>  
+				<img src="img/BB01_02.jpg" id="imgBB1" />
+			</div>
+		</div>
+
+		<div id="selectWrapper" > 
+			Select a photo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://youtu.be/_Om9wCK5XIg" id="BBVideo" style="color:blue" target="_blank" title="Watch video of these Breaking Bad photo locations">Watch video</a><br>
+			<select id="photoSelectBB" name="photoSelectBB" onchange="changePhoto(value, 'BB')">
+			<option value="BB01" selected="selected">Pants</option>
+			<option value="BB02">Cowhouse</option>
+			<option value="BB03">Cowhouse?</option>
+			<option value="BB04">Tighty Whities</option>
+			<option value="BB05">Waiting</option>
+			<option value="BB06">Gun</option>
+			<option value="BB07">Gun 2</option>
+			<option value="BB08">Misfire</option>
+			<option value="BB09">Digging (closeup)</option>
+			<option value="BB10">Digging (distance)</option>
+			<option value="BB11">Burying barrels</option>
+			<option value="BB12">I'll be home late</option>
+			<option value="BB13">Hiding</option>
+			<option value="BB14">ASAC Schrader</option>
+			<option value="BB15">Confrontation</option>
+			<option value="BB16">Bodywork</option>
+			<option value="BB17">Let's make a deal</option>
+			<option value="BB18">Sad</option>
+			<option value="BB19">I'm sorry for your loss</option>
+			<option value="BB20">Revenge</option>
+			<option value="BB21">Heisenberg</option>
+			<optgroup label="Other Locations">
+				<option value="BB22">Walt's House</option>
+				<option value="BB23">Car Wash 1</option>
+				<option value="BB24">Car Wash 2</option>
+				<option value="BB25">Hank's House</option>
+				<option value="BB26">Los Pollos Hermanos 1</option>
+				<option value="BB27">Los Pollos Hermanos 2</option>
+				<option value="BB28">Los Pollos Hermanos 3</option>
+				<option value="BB29">Los Pollos Hermanos 4</option>
+			</optgroup>
+			</select>
+		</div> 
+
+	</div>
+
+	<div id="fragment-2" style="padding: 0px 0px;position: relative;"> 
+		<div class="large-12 large-centered columns">
+			<div class="twentytwenty-container"> 
+				<img src="img/GBU01_01.jpg" id="imgGBU2"/>  
+				<img src="img/GBU01_02.jpg" id="imgGBU1" />
+			</div>
+		</div>
+		
+		<div id="selectWrapper" > 
+			Select a photo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://youtu.be/nw-AO3-Yz8o" style="color:blue" target="_blank" title="Watch video of these Good, Bad & Ugly photo locations">Watch video</a><br>
+			<select id="photoSelectGBU" name="photoSelectGBU" onchange="changePhoto(value, 'GBU')">
+			<option value="GBU01" selected="selected">Langston Bridge</option>
+			<option value="GBU02">Captain </option>
+			<option value="GBU03">Road to Sad Hill</option>
+			<option value="GBU04">Church</option>
+			<option value="GBU05">Cannon</option>
+			<option value="GBU06">Ecstasy of Gold</option>
+			<option value="GBU07">Standoff - Closeup</option>
+			<option value="GBU08">Standoff - Distance</option>
+			<option value="GBU09">The Good</option>
+			<option value="GBU10">The Bad</option>
+			<option value="GBU11">The Ugly</option>
+			<option value="GBU12">The Grave</option>
+			</select>
+
+		</div>
+	</div>
+		 
+	<div id="fragment-3" style="padding: 0px 0px;position: relative;"> 
+
+		<div class="large-12 large-centered columns">
+			<div class="twentytwenty-container"> 
+				<img src="img/TW01_01.jpg" id="imgTW2"/>  
+				<img src="img/TW01_02.jpg" id="imgTW1" />
+			</div>
+		</div>
+
+		<div id="selectWrapper" > 
+			Select a photo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://youtu.be/SfLjVGCW0i4" style="color:blue" target="_blank" title="Watch video of these Twilight photo locations">Watch video</a><br>
+			<select id="photoSelectTW" name="photoSelectTW" onchange="changePhoto(value, 'TW')">
+			<option value="TW01" selected="selected">Confronting Edward</option>
+			<option value="TW02">The Reveal</option>
+			<option value="TW03">Following Edward</option>
+			<option value="TW04">Camouflage</option>
+			<option value="TW05">"Even my smell..."</option>
+			<option value="TW06">Jumping</option>
+			<option value="TW07">Throwing branch</option>
+			<option value="TW08">"I've killed people before"</option>
+			<option value="TW09">Tree 1</option>
+			<option value="TW10">Personal brand of heroin</option>
+			<option value="TW11">Tree 2</option>
+			<option value="TW12">The Lion and the Lamb</option>
+			</select>
+
+		</div> 
+
+	</div>	
+
+	<div id="fragment-4" style="padding: 0px 0px;position: relative;"> 
+
+		<div class="large-12 large-centered columns">
+			<div class="twentytwenty-container"> 
+				<img src="img/OUAT01_01.jpg" id="imgOUAT2"/>  
+				<img src="img/OUAT01_02.jpg" id="imgOUAT1" />
+			</div>
+		</div>
+
+		<div id="selectWrapper" > 
+			Select a photo:<br>
+			<select id="photoSelectOUAT" name="photoSelectOUAT" onchange="changePhoto(value, 'OUAT')">
+			<option value="OUAT01" selected="selected">Road to Sweetwater 1</option>
+			<option value="OUAT02">Railroad Camp</option>
+			<option value="OUAT03">Road to Sweetwater 2</option>
+			<option value="OUAT04">Harmonica 1</option>
+			<option value="OUAT05">Harmonica 2</option>
+			<option value="OUAT06">Harmonica 3</option>
+			<option value="OUAT07">Harmonica 4</option>
+			</select>
+
+		</div> 
+	</div>	
+	
+	
+	<div id="fragment-5" style="padding: 0px 0px;position: relative;"> 
+		<div class="large-12 large-centered columns">
+			<div class="twentytwenty-container"> 
+				<img src="img/FG01_01.jpg" id="imgFG2"/>  
+				<img src="img/FG01_02.jpg" id="imgFG1" />
+			</div>
+		</div>
+
+		<div id="selectWrapper" > 
+			Select a photo:<br>
+			<select id="photoSelectFG" name="photoSelectFG" onchange="changePhoto(value, 'FG')">
+			<option value="FG01" selected="selected">Running</option>
+			</select>
+
+		</div> 
+	</div>
+	<div id="stats"></div>
+
+	<img id="imgButtonWidth" src="img/fit_horizontal.png" onclick="buttonWidth()" title="Fit images horizontally"/>
+	<img id="imgButtonHeight" src="img/fit_vertical.png" onclick="buttonHeight()" title="Fit images vertically"/>
+</div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37193295-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+</body>
+</html>

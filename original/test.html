@@ -1,1 +1,64 @@
-test
+
+
+
+
+<html>                                                                  
+<head>                                                                  
+<script type="text/javascript" src="jquery-1.7.js"></script>          
+<script type="text/javascript"> 
+                                        
+var stoolImages = new Array()
+stoolImages[0]="images_cd/cd_index_picture_top_1.jpg"
+stoolImages[1]="images_cd/cd_index_picture_top_2.jpg"
+stoolImages[2]="images_cd/cd_index_picture_top_3.jpg"
+stoolImages[3]="images_cd/cd_index_picture_top_4.jpg"
+stoolImages[4]="images_cd/cd_index_picture_top_5.jpg"
+stoolImages[5]="images_cd/cd_index_picture_top_6.jpg"
+
+
+function shuffleArray ( stoolImages ) {
+  var i = stoolImages.length, j, tempi, tempj;
+  if ( i == 0 ) return false;
+  while ( --i ) {
+     j = Math.floor( Math.random() * ( i + 1 ) );
+     tempi = stoolImages[i];
+     tempj = stoolImages[j];
+     stoolImages[i] = tempj;
+     stoolImages[j] = tempi;
+   }
+}
+
+
+
+</script>                                                               
+</head>                                                                 
+<body> 
+                                                                 
+<div id="imageSwap">
+</div>  
+
+
+<script language="javascript" type="text/javascript">
+
+shuffleArray(stoolImages)
+
+
+$(document).ready(function () {
+	setRandomStoolImage1(-1);
+});
+
+    function setRandomStoolImage1(nm) {
+	nm=nm+1
+	if (nm >= stoolImages.length) { nm=0 }
+        $('#imageSwap').fadeIn(500).html('<img src= '+ stoolImages[nm]+' />').delay(2000).fadeOut(500, function () { setRandomStoolImage2(nm); });
+    }
+
+    function setRandomStoolImage2(nm) {
+	nm=nm+1
+	if (nm >= stoolImages.length) { nm=0 }
+      	$('#imageSwap').fadeIn(500).html('<img src= '+stoolImages[nm]+' />').delay(2000).fadeOut(500, function () { setRandomStoolImage1(nm); });
+    }
+
+  </script>                                      
+ </body>                                                                 
+ </html>

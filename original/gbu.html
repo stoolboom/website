@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Good Bad and Ugly</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+  <link rel="stylesheet" href="https://js.arcgis.com/3.11/dijit/themes/claro/claro.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/3.11/esri/css/esri.css">
+  <style>
+    html, body, #mapDiv{
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+   
+    
+        #selectWrapper {
+        position:absolute; 
+        padding: 5px;
+        left: 65px; 
+        top:25px; 
+        z-Index: 40;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 14px;
+        width: 150px;
+        height: 44px;
+        background: #f4f4f4;
+        -moz-box-shadow: 0 0 5px #444444;
+        -webkit-box-shadow: 0 0 5px #444444;
+        box-shadow: 0 0 5px #444444;
+      }
+
+      }
+  </style>
+  <script type="text/javascript">var dojoConfig = { parseOnLoad: true };</script> 
+  <script src="https://js.arcgis.com/3.11/"></script>
+  
+
+ 
+ 
+ 
+  <script>
+    //var map;
+
+    require([
+        "esri/map", 
+        "esri/layers/ArcGISDynamicMapServiceLayer",
+        "esri/layers/ImageParameters",
+        "esri/dijit/LayerSwipe",
+        "esri/request",
+        "esri/geometry/Extent",
+        "esri/SpatialReference",
+		"dojo/on",
+		"dijit/registry",
+		"dijit/layout/BorderContainer",
+		"dijit/layout/ContentPane",
+		"dijit/form/HorizontalSlider",
+		"dijit/form/HorizontalRuleLabels",
+		"dijit/form/Select",
+		"dojo/parser",
+        "esri/config",
+        "dojo/domReady!"
+    ], function(
+		Map, Dynamic, ImageParameters, LayerSwipe, esriRequest, Extent, SpatialReference, on, registry, esriConfig
+	) {
+
+
+
+       
+        var request=new esriRequest({
+           url: "https://maps.orcity.org/arcgis/rest/services/CHRIS/GBU/MapServer/layers",
+           content: { f:"json" },
+           handleAs: "json",
+           callbackParamName: "callback",
+        });
+ 
+	    request.then(requestSucceeded,requestFailed)	
+	    
+		function requestFailed(error) {
+				alert("Error retrieving photo extents!")
+		}
+			
+		function requestSucceeded(data) { 
+ 
+			var map = new Map("mapDiv");
+			map.enableScrollWheelZoom()
+			map.enableShiftDoubleClickZoom()
+
+			var photoExtents = []
+		    for (index=0; index < data.layers.length; ++index) {
+				//photoExtents[index]=data.layers[index].extent.expand(1.1)
+				photoExtents[index]=new Extent(data.layers[index].extent.xmin,data.layers[index].extent.ymin,data.layers[index].extent.xmax,data.layers[index].extent.ymax, new SpatialReference({ wkid:102100 })).expand(1.1);
+		       //alert(data.layers[index].extent.xmin)
+		     }
+	        
+	        var widthPixels=map.width / 2
+			map.setExtent(photoExtents[0]);
+	        
+	        
+	        var imageParametersPhoto=new ImageParameters()
+	        imageParametersPhoto.format="png32"
+			imageParametersPhoto.layerIds=[0];
+			imageParametersPhoto.layerOption=ImageParameters.LAYER_OPTION_SHOW;
+		
+			var imageParametersBackground=new ImageParameters()
+			imageParametersBackground.format="png32"
+			imageParametersBackground.layerIds=[1];
+			imageParametersBackground.layerOption=ImageParameters.LAYER_OPTION_SHOW;
+ 
+			var dynamicBackground = new Dynamic("https://maps.orcity.org/arcgis/rest/services/CHRIS/GBU/MapServer",{"imageParameters":imageParametersBackground});    
+			map.addLayer(dynamicBackground);
+		
+			var dynamicPhoto = new Dynamic("https://maps.orcity.org/arcgis/rest/services/CHRIS/GBU/MapServer",{"imageParameters":imageParametersPhoto});
+			map.addLayer(dynamicPhoto);	   
+			
+			var swipeWidget=new LayerSwipe({
+				type: "vertical",
+				map: map,
+				layers: [dynamicPhoto],
+				left: widthPixels
+			}, "swipeDiv");
+			swipeWidget.startup();
+			
+			//wire an event handler for the dojo select box
+            map.on("load", function() {
+              on(registry.byId('photoSelect'), 'change', changePhoto);
+            });
+
+            function changePhoto(thePhotoIndex) {
+
+				dynamicPhoto.setVisibleLayers([thePhotoIndex])
+				thePhotoIndexPlus1=parseInt(thePhotoIndex)+1
+				dynamicBackground.setVisibleLayers([thePhotoIndexPlus1])
+				map.setExtent(photoExtents[thePhotoIndex]);
+					swipeWidget.startup();
+            }
+		}
+	  }	
+    );
+
+  </script>
+
+</head>
+<body class="claro">
+
+<!--<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline',gutters:false" style="width: 100%; height: 100%; margin: 0;">-->
+  
+	<div id="mapDiv" 
+	data-dojo-type="dijit/layout/ContentPane" 
+	data-dojo-props="region:'center'"
+	style="width: 100%; height: 100%; margin: 0;"> 
+	
+	<div id="swipeDiv"></div>
+
+	<div id="selectWrapper" > 
+	Select a photo:<br>
+	<select id="photoSelect" data-dojo-type="dijit.form.Select" name="photoSelect" >
+	<option value="0" selected="selected">Langston Bridge</option>
+	<option value="2">Captain </option>
+	<option value="4">Road to Sad Hill</option>
+	<option value="6">Church</option>
+	<option value="8">Cannon</option>
+	<option value="10">Ecstasy of Gold</option>
+	<option value="12">Standoff - Closeup</option>
+	<option value="14">Standoff - Distance</option>
+	<option value="16">The Good</option>
+	<option value="18">The Bad</option>
+	<option value="20">The Ugly</option>
+	<option value="22">The Grave</option>
+	</select>
+	</div> 
+    
+</div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37193295-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+</body>
+</html>

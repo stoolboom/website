@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Movie Locations</title>
+  
+	<script src="js/jquery-3.3.1.min.js"></script>	
+	<!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+	<script src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
+    <script src="js/jquery.event.move.js"></script>
+    <script src="js/jquery.twentytwenty.js"></script>
+
+	<link rel="stylesheet" href="css/jquery-ui.css"> 
+	<link href="css/foundation.css" rel="stylesheet" type="text/css" />
+	<link href="css/twentytwenty.css" rel="stylesheet" type="text/css" />
+
+
+  <style>
+
+	
+
+
+ 
+ #stats {
+ position: absolute;
+ left:12px;
+ top:500px;
+ color:yellow;
+ }
+	
+#theBody {
+	overflow:hidden;
+}
+
+</style>
+
+<script>
+	var expandToWidth=true
+	var initialWidth
+	var initialHeight
+
+
+	
+	var ratioBB01=1.78
+	var ratioBB02=1.33
+	var ratioBB03=1.78
+	var ratioBB04=1.60
+	var ratioBB05=1.27
+	var ratioBB06=1.77
+	var ratioBB07=1.52
+	var ratioBB08=1.67
+	var ratioBB09=1.54
+	var ratioBB10=1.55
+	var ratioBB11=2.07
+	var ratioBB12=1.48
+	var ratioBB13=1.31
+	var ratioBB14=1.45
+	var ratioBB15=1.57
+	var ratioBB16=1.40
+	var ratioBB17=1.67
+	var ratioBB18=1.31
+	var ratioBB19=1.63
+	var ratioBB20=1.69
+	var ratioBB21=1.53
+
+
+var queryString = function () {
+  // This function is anonymous, is executed immediately and 
+  // the return value is assigned to QueryString!
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    	// If first entry with this name
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = pair[1];
+    	// If second entry with this name
+    } else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]], pair[1] ];
+      query_string[pair[0]] = arr;
+    	// If third or later entry with this name
+    } else {
+      query_string[pair[0]].push(pair[1]);
+    }
+  } 
+    return query_string;
+} ();
+
+
+var theScene=1
+if (queryString.scene==null || queryString.scene=="") {
+	theScene=1
+} else {
+	theScene=queryString.scene
+}	
+	
+if (theScene < 10) {
+	theFormattedScene="0" + theScene.toString().trim()
+} else {
+	theFormattedScene=theScene.toString().trim()	
+}
+
+var thePosition=0.5
+if (queryString.thePosition==null || queryString.thePosition=="") {
+	theScene=0.5
+} else {
+	thePosition=queryString.thePosition
+}	
+
+
+
+	$( document ).ready(function(){
+		$(".twentytwenty-container[data-orientation!='vertical']").twentytwenty({default_offset_pct: thePosition, before_label: '', after_label: '', click_to_move: true});
+		doStuff()
+	});
+
+
+	function doStuff() {
+
+		//theSelected=$("#photoSelectBB").val()
+
+		
+		theSelected="BB"+ theFormattedScene
+
+		document.getElementById("imgBB1").src="img/"+theSelected+"_01.jpg"
+		document.getElementById("imgBB2").src="img/"+theSelected+"_02.jpg"
+		
+		
+		
+		//theSelectedIndex=parseInt(theSelected.substr(theSelected.length-2),10)
+		$(".twentytwenty-handle").css({"visibility":"visible"})
+
+
+		
+		
+		if ($(window).width()/($(window).height()) > eval("ratio"+theSelected)) {
+		//Window is wider than it needs to be
+
+			
+			if (expandToWidth==false) {	
+			// Resize to height of window.  This is the default
+				$("#imgBB1").css({"height": $(window).height()});
+				$("#imgBB2").css({"height": $(window).height()});
+			} else {
+			//Resize to width of window
+				$("#imgBB1").css({"height": "auto"});	
+				$("#imgBB2").css({"height": "auto"});			
+			}
+		} else {
+		//Window is too narrow
+			// Resize to width of window
+
+				$("#imgBB1").css({"height": "auto"});	
+				$("#imgBB2").css({"height": "auto"});	
+			}
+			
+		//$(window).trigger("resize");
+		
+	}
+
+	
+
+
+
+	function changePhoto(selectedPhoto, movie) {
+
+
+		document.getElementById("imgBB1").src="img/"+selectedPhoto+"_01.jpg"
+		document.getElementById("imgBB2").src="img/"+selectedPhoto+"_02.jpg"
+		
+	
+		doStuff()
+	}
+
+
+
+</script>
+
+</head>
+  
+<body bgcolor="#E6E6FA" id="theBody">
+
+
+	<div id="fragment-1" style="padding: 0px 0px;position: relative; overflow: hidden;"> 
+
+		<div class="large-12 large-centered columns">
+			<div class="twentytwenty-container"> 
+				<img src="img/BB01_01.jpg" id="imgBB2"/>  
+				<img src="img/BB01_02.jpg" id="imgBB1" />
+			</div>
+		</div>
+
+
+
+	</div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37193295-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+</body>
+</html>

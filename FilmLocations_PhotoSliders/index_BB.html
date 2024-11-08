@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Film Locations</title>
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"</script>
+  <!--<script type="text/javascript" src="js/jquery.min.js"></script>-->
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="js/mdb.min.js"></script>
+ 
+  <!-- Your custom scripts (optional) -->
+  <script src="js/jquery-ui-1.12.1/jquery-ui.js"></script> 	
+  <script src="js/jquery.event.move.js"></script>
+  <script src="js/jquery.twentytwenty.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Google Fonts Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <!-- Material Design Bootstrap -->
+  <link rel="stylesheet" href="css/mdb.min.css">
+
+  <!-- Your custom styles (optional) -->
+  <link href="css/foundation.css" rel="stylesheet" type="text/css" />
+  <link href="css/twentytwenty.css" rel="stylesheet" type="text/css" />
+  
+  <script>
+    $(function(){
+      $(".twentytwenty-container[data-orientation!='vertical']").twentytwenty({default_offset_pct: 0.7});
+      $(".twentytwenty-container[data-orientation='vertical']").twentytwenty({default_offset_pct: 0.3, orientation: 'vertical'});
+    });
+  </script> 
+
+  <style>
+	#radiosWrapper {
+		visibility: visible;
+	    position: absolute;
+	    width: 272px;
+	    left: 15px;
+	    top: 55px;
+	    background: #fff;
+	    height: calc(1.5em + 0.5rem + 5px);
+	    padding-top: 0.25rem;
+	    padding-bottom: 0.25rem;
+	    padding-left: 0.5rem;
+	    font-size: 0.875rem;
+	    border: 1px solid #ced4da;
+	    border-radius: 0.25rem;
+	    -webkit-appearance: none;
+	}
+
+	#radios {
+	    visibility: visible;
+	    position: relative;
+	    left: 0px;
+	    top: 0px;
+	    font-size: 14px;
+	    color:#495057;
+	}
+
+	#selectBox {
+	    visibility: visible;
+	    position: absolute;
+	    left: 15px;
+	    top: 15px;
+	}
+
+	#mainWrapper {
+		padding-top: 0px;
+		padding-bottom: 0px;
+		text-align: left;
+	}
+
+  </style>
+
+	<script>
+	
+	var expandToWidth=false
+	var initialWidth
+	var initialHeight
+	var rtime;
+	var timeout = false;
+	var delta = 100;
+	
+	var ratioBB01=1.33
+	var ratioBB01a=1.77
+	var ratioBB02=1.60
+	var ratioBB02a=1.78
+	var ratioBB03=1.52
+	var ratioBB03a=1.78
+	var ratioBB04=1.40
+	var ratioBB04a=1.78
+	var ratioBB05=1.28
+	var ratioBB05a=1.75
+	var ratioBB06=1.78
+	var ratioBB06a=1.78
+	var ratioBB07=1.52
+	var ratioBB07a=1.54
+	var ratioBB08=1.68
+	var ratioBB08a=1.68
+	var ratioBB09=1.55
+	var ratioBB09a=1.55
+	var ratioBB10=1.56
+	var ratioBB10a=1.56
+	var ratioBB11=2.07
+	var ratioBB11a=1.78
+	var ratioBB12=1.48
+	var ratioBB12a=1.76
+	var ratioBB13=1.32
+	var ratioBB13a=1.78
+	var ratioBB14=1.46
+	var ratioBB14a=1.78
+	var ratioBB15=1.58
+	var ratioBB15a=1.61
+	var ratioBB16=1.40
+	var ratioBB16a=1.78
+	var ratioBB17=1.68
+	var ratioBB17a=1.78
+	var ratioBB18=1.31
+	var ratioBB18a=1.78
+	var ratioBB19=1.63
+	var ratioBB19a=1.77
+	var ratioBB20=1.70
+	var ratioBB20a=1.78
+	var ratioBB21=1.53
+	var ratioBB21a=1.53
+	
+	var ratioBB22=0.88
+	var ratioBB22a=0.88
+	var ratioBB23=0.87
+	var ratioBB23a=0.87
+	var ratioBB24=0.80
+	var ratioBB24a=0.80
+	var ratioBB25=0.82
+	var ratioBB25a=0.82
+	var ratioBB26=0.84
+	var ratioBB26a=0.84
+	var ratioBB27=0.77
+	var ratioBB27a=0.77
+	var ratioBB28=0.84
+	var ratioBB28a=0.84
+	var ratioBB29=0.86
+	var ratioBB29a=0.86
+	
+	var sliderBB01=true
+	var sliderBB02=true
+	var sliderBB03=true
+	var sliderBB04=true
+	var sliderBB05=true
+	var sliderBB06=true
+	var sliderBB07=true
+	var sliderBB08=true
+	var sliderBB09=true
+	var sliderBB10=true
+	var sliderBB11=true
+	var sliderBB12=true
+	var sliderBB13=true
+	var sliderBB14=true
+	var sliderBB15=true
+	var sliderBB16=true
+	var sliderBB17=true
+	var sliderBB18=true
+	var sliderBB19=true
+	var sliderBB20=true
+	var sliderBB21=true
+	
+	var sliderBB22=false
+	var sliderBB23=false
+	var sliderBB24=false
+	var sliderBB25=false
+	var sliderBB26=false
+	var sliderBB27=false
+	var sliderBB28=false
+	var sliderBB29=false
+
+	$( document ).ready(function(){
+		$(".twentytwenty-container[data-orientation!='vertical']").twentytwenty({default_offset_pct: 0.6, before_label: '', after_label: '', click_to_move: true});
+		expandToWidth=false	
+		doStuff()
+
+	});
+
+	function doStuff() {
+		theSelected=$("#selectPhoto").val()
+
+		theSelectedIndex=parseInt(theSelected.substr(theSelected.length-2),10)
+
+		//Figure out whether to turn the slider on or off
+		if (eval("slider"+theSelected)) {
+			//These are the double images.  Turn slider on
+			$(".twentytwenty-handle").css({"visibility":"visible"})
+			document.getElementById("defaultInline1").disabled=false
+			document.getElementById("defaultInline2").disabled=false
+
+		} else {
+			//These are the single images.  Turn slider off
+			$(".twentytwenty-handle").css({"visibility":"hidden"})
+			document.getElementById("defaultInline1").disabled=true
+			document.getElementById("defaultInline2").disabled=true			
+		}			
+
+		//Figure out which ratio to use
+		if (eval("slider"+theSelected==false)) {
+			theRatioToUse=theSelected
+		} else {
+			if (document.getElementById("defaultInline1").checked) {
+				theRatioToUse=theSelected
+			} else {
+				theRatioToUse=theSelected+"a"
+			}
+		}
+		//console.log(eval("ratio"+theRatioToUse))
+		
+		if ($(window).width()/($(window).height()) > eval("ratio"+theRatioToUse)) {
+			if (expandToWidth==false) {	
+				// Resize to height of window.  This is the default
+				//console.log("opt 1 - resize to height of window")
+				$("#imgLeft").css({"height": $(window).height()});
+				$("#imgRight").css({"height": $(window).height()});
+				$("#imgLeft").css({"width": "auto"});	
+				$("#imgRight").css({"width": "auto"});
+
+			} else {
+				//Resize to width of window
+				//console.log("opt 2 - resize to width of window")
+				$("#imgLeft").css({"width": $(window).width()});
+				$("#imgRight").css({"width": $(window).width()});
+				$("#imgLeft").css({"height": "auto"});	
+				$("#imgRight").css({"height": "auto"});		
+			}
+		} else {
+			//Window is too narrow
+			// Resize to width of window
+			//console.log("opt 3 - Window is too narrow - resize to width of window")			
+			$("#imgLeft").css({"width": $(window).width()});
+			$("#imgRight").css({"width": $(window).width()});
+			$("#imgLeft").css({"height": "auto"});	
+			$("#imgRight").css({"height": "auto"});
+		}
+			
+		$(window).trigger("resize");	
+	}
+	
+	$(window).resize(function() {
+
+		rtime = new Date();
+		if (timeout === false) {
+			timeout = true;
+			setTimeout(resizeEnd, delta);
+	   }
+	});
+
+	function resizeEnd() {
+		if (new Date() - rtime < delta) {
+			setTimeout(resizeEnd, delta);
+		} else {
+			timeout = false;
+			doStuff()
+		}               
+	}
+
+
+	function changePhoto(selectedPhoto) {
+		theSelected=$("#selectPhoto").val()
+		theSelectedIndex=parseInt(theSelected.substr(theSelected.length-2),10)
+
+		if (document.getElementById("defaultInline1").checked) {
+			document.getElementById("imgLeft").src="Images/"+selectedPhoto+"_01.jpg"
+			document.getElementById("imgRight").src="Images/"+selectedPhoto+"_02.jpg"
+		} else {
+			if (eval("slider"+theSelected)) {
+				document.getElementById("imgLeft").src="Images/"+selectedPhoto+"a_01.jpg"
+				document.getElementById("imgRight").src="Images/"+selectedPhoto+"a_02.jpg"		
+			} else {
+				document.getElementById("imgLeft").src="Images/"+selectedPhoto+"_01.jpg"
+				document.getElementById("imgRight").src="Images/"+selectedPhoto+"_02.jpg"			
+			}
+		}
+		expandToWidth=false		
+		doStuff()
+	}
+	
+	function changeSize(theDimensions) {
+		if (theDimensions=="photo") {
+			document.getElementById("imgLeft").src="Images/" + document.getElementById("selectPhoto").value + "_01.jpg"
+			document.getElementById("imgRight").src="Images/" + document.getElementById("selectPhoto").value + "_02.jpg"
+		} else {
+			document.getElementById("imgLeft").src="Images/" + document.getElementById("selectPhoto").value + "a_01.jpg"
+			document.getElementById("imgRight").src="Images/" + document.getElementById("selectPhoto").value + "a_02.jpg"		
+		}
+		expandToWidth=false		
+		doStuff()
+	}
+	
+  </script>
+
+</head>
+
+
+
+<body style="background-color: #65d6a9;">
+
+  <!-- Start your project here-->  
+<div id="mainWrapper">
+
+	<div class="large-12 large-centered column" >
+		<div class="twentytwenty-container" > 
+			<img src="Images/BB01_02.jpg" id="imgRight"/>  
+			<img src="Images/BB01_01.jpg" id="imgLeft" />
+		</div>
+	</div>
+		
+	<div id="selectBox" class="divSelect" style="width: 14rem;">
+		<select id="selectPhoto" class="custom-select custom-select-sm" onchange="changePhoto(value)">
+		<optgroup label="To'hajiilee">
+		  <option value="BB01" selected>Pants</option>
+		  <option value="BB02">Cowhouse</option>
+		  <option value="BB03">Cowhouse???</option>
+		  <option value="BB04">Tighty Whities</option>
+		  <option value="BB05">Waiting</option>
+		  <option value="BB06">Gun</option>
+		  <option value="BB07">Gun 2</option>
+		  <option value="BB08">Misfire</option>
+		  <option value="BB09">Digging (closeup)</option>
+		  <option value="BB10">Digging (distance)</option>
+		  <option value="BB11">Burying Barrels</option>
+		  <option value="BB12">I'll be home late</option>
+		  <option value="BB13">Hiding</option>
+		  <option value="BB14">ASAC Schrader</option>
+		  <option value="BB15">Confrontation</option>
+		  <option value="BB16">Bodywork</option>
+		  <option value="BB17">Let's make a deal</option>
+		  <option value="BB18">Sad</option>
+		  <option value="BB19">I'm sorry for your loss</option>
+		  <option value="BB20">Revenge</option>
+		  <option value="BB21">Heisenberg</option>
+		  </optgroup>
+		  <optgroup label="Other locations">
+		  <option value="BB22">Walt's House</option>
+		  <option value="BB23">Car Wash 1</option>
+		  <option value="BB24">Car Wash 2</option>
+		  <option value="BB25">Hank's House</option>
+		  <option value="BB26">Los Pollos Hermanos 1</option>
+		  <option value="BB27">Los Pollos Hermanos 2</option>
+		  <option value="BB28">Los Pollos Hermanos 3</option>
+		  <option value="BB29">Los Pollos Hermanos 4</option>
+		  </optgroup>
+		</select>
+	</div>
+
+	<div id="radiosWrapper" style="width: 10rem;">
+		<div id="radios">
+			<!-- Default inline 1-->
+			<div class="custom-control custom-radio custom-control-inline">
+				<input type="radio" class="custom-control-input" id="defaultInline1" name="inlineDefaultRadiosExample" onchange="changeSize('photo')" checked>
+				<label class="custom-control-label" for="defaultInline1" style="line-height: 25px;">Photo</label>
+			</div>
+
+			<!-- Default inline 2-->
+			<div class="custom-control custom-radio custom-control-inline">
+				<input type="radio" class="custom-control-input" id="defaultInline2" name="inlineDefaultRadiosExample" onchange="changeSize('film')">
+				<label class="custom-control-label" for="defaultInline2" style="line-height: 25px;">Film</label>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+
+<!-- End your project here-->
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37193295-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</body>
+</html>

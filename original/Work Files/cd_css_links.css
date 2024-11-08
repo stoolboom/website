@@ -1,0 +1,19 @@
+@charset "UTF-8";
+/* CSS Document */
+
+a:link {
+	color: #f04e23;
+}
+a:visited {
+	color: #f04e23;
+}
+a:hover {
+	color: #f06a19;
+}
+
+.border {border: 5px solid #ffffff;
+} 
+
+
+
+-->
